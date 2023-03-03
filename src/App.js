@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchBranches } from './actions';
 
 function App() {
+  const dispatch = useDispatch();
+  const branches = useSelector(state => state.branches.branches);
+  const error = useSelector(state => state.branches.error);
+
+  useEffect(() => {
+    dispatch(fetchBranches());
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Company Branch List</h1>
+      {error && <p>{error.message}</p>}
+      <ul>
+        {branches.map(branch => (
+          <li key={branch.id}>
+            <div>
+              <h2>{branch.name}</h2>
+              <p>{branch.address1}</p>
+              <p>{branch.address2}</p>
+              <p>{branch.phone}</p>
+              <p>{branch.email}</p>
+              <img src={branch.branch_logo} alt={`${branch.name} logo`} />
+              <img src={branch.branch_image} alt={`${branch.name} image`} />
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
